@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { Route, Redirect, Switch } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
-import Footer from '../components/Footer';
+import Player from '../components/Footer';
 import Albums from '../components/Albums';
 import SingleAlbum from '../components/SingleAlbum';
 import audio from '../audio';
@@ -153,7 +153,7 @@ export default class Main extends React.Component {
             <Redirect from="/" to="/albums" />
           </Switch>
         </div>
-        <Footer 
+        <Player 
           selectedSong={selectedSong}
           isPlaying={isPlaying} 
           play={this.play} 
