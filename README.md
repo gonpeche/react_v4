@@ -93,7 +93,7 @@ Para hacer una analogía a las matemáticas, pensemos las aplicaciones Redux com
 
 ## Construyendo Busqueda de Lyrics
 
-### Que dice?
+### ¿Qué dice?
 
 Mucho de este workshop va a ser reorganizar y refactorear funcionalidad existente, así que va ser lo mejor hacer nuestra primer parte de Redux en un feature nuevo.
 
