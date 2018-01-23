@@ -8,7 +8,7 @@ export default class SingleAlbum extends React.Component {
   }
 
   render() {
-    const { album, start, selectedSong } = this.props;
+    const { album, start, currentSong } = this.props;
     return (
       <div className="album">
         <div>
@@ -18,7 +18,7 @@ export default class SingleAlbum extends React.Component {
         <Songs 
           songs={album.songs}
           start={start}
-          selectedSong={selectedSong}
+          currentSong={currentSong}
         />
       </div>
     );

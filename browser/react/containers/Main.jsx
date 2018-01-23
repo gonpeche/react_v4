@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { Route, Redirect, Switch } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
-import Footer from '../components/Footer';
+import Player from '../components/Player';
 import Albums from '../components/Albums';
 import SingleAlbum from '../components/SingleAlbum';
 import audio from '../audio';
@@ -17,7 +17,7 @@ export default class Main extends React.Component {
     this.state = {
       albums: [],
       selectedAlbum: {},
-      selectedSong: {},
+      currentSong: {},
       isPlaying: false,
       currentSongList: [],
       progress: 0,
@@ -120,7 +120,7 @@ export default class Main extends React.Component {
       });
   }
   start(song, songs) {
-    this.setState({ selectedSong: song, currentSongList: songs })
+    this.setState({ currentSong: song, currentSongList: songs })
     this.loadSong(song.audioUrl);
   }
 
@@ -141,7 +141,7 @@ export default class Main extends React.Component {
   }
   
   findSongIndex() {
-    return this.state.currentSongList.findIndex(song => song.id === this.state.selectedSong.id);
+    return this.state.currentSongList.findIndex(song => song.id === this.state.currentSong.id);
   }
 
   next() {
@@ -150,7 +150,7 @@ export default class Main extends React.Component {
       index = 0 
     }
     const song = this.state.currentSongList[index];
-    this.setState({ selectedSong: song })
+    this.setState({ currentSong: song })
     this.loadSong(song.audioUrl)
   }
 
@@ -160,7 +160,7 @@ export default class Main extends React.Component {
       index = this.state.currentSongList.length - 1 
     }
     const song = this.state.currentSongList[index];
-    this.setState({ selectedSong: song })
+    this.setState({ currentSong: song })
     this.loadSong(song.audioUrl)
   }
 
@@ -168,7 +168,7 @@ export default class Main extends React.Component {
     const  {
       albums,
       selectedAlbum,
-      selectedSong,
+      currentSong,
       isPlaying,
       progress,
       artists,
@@ -187,7 +187,7 @@ export default class Main extends React.Component {
               render={({ match }) => (
                 <SingleAlbum 
                   selectAlbum={this.selectAlbum}
-                  selectedSong={selectedSong}
+                  currentSong={currentSong}
                   start={this.start}
                   album={selectedAlbum} 
                   albumId={match.params.id} 
@@ -202,7 +202,7 @@ export default class Main extends React.Component {
                 path={match.path}
                 artist={selectedArtist}
                 start={this.start}
-                selectedSong={selectedSong}
+                currentSong={currentSong}
                 selectArtist={this.selectArtist} />}
               />
             <Route path="/playlists/new" render={() => <NewPlaylistContainer addPlaylist={this.addPlaylist} />} />
@@ -211,7 +211,7 @@ export default class Main extends React.Component {
                 playlistId={match.params.id}
                 playlist={selectedPlaylist}
                 start={this.start}
-                selectedSong={selectedSong}
+                currentSong={currentSong}
                 selectPlaylist={this.selectPlaylist}
                 addSong={this.addSong}
               />} 
@@ -219,8 +219,8 @@ export default class Main extends React.Component {
             <Redirect from="/" to="/albums" />
           </Switch>
         </div>
-        <Footer 
-          selectedSong={selectedSong}
+        <Player 
+          currentSong={currentSong}
           isPlaying={isPlaying} 
           play={this.play} 
           pause={this.pause}

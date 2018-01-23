@@ -9,7 +9,7 @@ export default class Artist extends React.Component {
     this.props.selectArtist(this.props.artistId)
   }
   render() {
-   const { selectedSong, start, artist, url, path } = this.props;
+   const { currentSong, start, artist, url, path } = this.props;
     return (
       <div>
         <h3>{ artist.name }</h3>
@@ -18,7 +18,7 @@ export default class Artist extends React.Component {
           <li><Link to={`${url}/songs`}>SONGS</Link></li>
         </ul>
         <Route path={`${path}/albums`} render={() => <Albums albums={artist.albums} /> }/>
-        <Route path={`${path}/songs`} render={() => <Songs songs={artist.songs} start={start} selectedSong={selectedSong} />} />
+        <Route path={`${path}/songs`} render={() => <Songs songs={artist.songs} start={start} currentSong={currentSong} />} />
       </div>
     );
   }

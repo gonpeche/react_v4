@@ -1,7 +1,7 @@
 import React from 'react';
 
-export default ({ selectedSong, isPlaying, play, pause, next, previous, progress }) => (
-  selectedSong.id ?
+export default ({ currentSong, isPlaying, play, pause, next, previous, progress }) => (
+  currentSong.id ?
     <footer>
       <div className="pull-left">
         <button onClick={previous} className="btn btn-default">

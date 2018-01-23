@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default ({ selectedSong, start, songs }) => (
+export default ({ currentSong, start, songs }) => (
   <table className='table'>
     <thead>
       <tr>
@@ -12,9 +12,9 @@ export default ({ selectedSong, start, songs }) => (
     </thead>
     <tbody>
       {songs && songs.map(song => 
-        <tr className={selectedSong.id === song.id ? 'active' : ''} key={song.id}>
+        <tr className={currentSong.id === song.id ? 'active' : ''} key={song.id}>
           <td>
-            {selectedSong.id !== song.id ?
+            {currentSong.id !== song.id ?
               <button onClick={() => start(song, songs)} className="btn btn-default btn-xs">
                 <span className="glyphicon glyphicon-play"></span>
               </button> 
