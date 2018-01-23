@@ -524,18 +524,14 @@ export default class extends Component {
   }
 
   handleSubmit(event) {
-
     event.preventDefault();
     if (this.state.artistQuery && this.state.songQuery) {
-
       axios.get(`/api/lyrics/${this.state.artistQuery}/${this.state.songQuery}`)
         .then(response => {
           const setLyricsAction = setLyrics(response.data.lyric);
           store.dispatch(setLyricsAction);           
         });
-
     }
-
   }
 
   render() {
@@ -581,8 +577,8 @@ La función `createStore` de Redux acepta middlewares como su segundo argumento.
 
 1. `npm install --save redux-logger`
 2. En `store.js`, importá una función helper de redux llamada `applyMiddleware`.
-3. `import loggerMiddleware from 'redux-logger`
-4. `applyMiddleware` acepta un numero de middlewares como argumentos - pasale el `loggerMiddleware` a `applyMiddleware`
+3. `import { createLogger } from 'redux-logger`
+4. `applyMiddleware` acepta un numero de middlewares como argumentos - pasale el `createLogger` ejecutado a `applyMiddleware`
 5. Pasa el resultado de `applyMiddleware` a el ultimo argumento de `createStore`. **NOTA**: Si tenes Redux devtools vas a necesitar referirte a [las instrucciones más avanzadas aquí](https://github.com/zalmoxisus/redux-devtools-extension#12-advanced-store-setup).
 
 Ahora, refreshea la página para dispatchear tu acción `SET_LYRICS` otra vez (buscando). Chequeá tu consola. Vamos a ver un output loggeado para cada acción que es enviada a nuestro store, como también información sobre el estado anterior y siguiente. Muy copado, no?
@@ -906,34 +902,57 @@ const setCurrentSongList = (currentSongList) => ({
 ```
 |||
 
-- Escribi action creators ASINCRÓNICOS que van a hacer capaces de manejar los efectos secundarios (como llamar un mñetodo en nuesto elemento audio). PISTA: todos los métodos que tenemos en nuestro componente de arriba pueden ser re-escritos como async action creators
+- Escribi action creators ASINCRÓNICOS que van a hacer capaces de manejar los efectos secundarios (como llamar un método en nuesto elemento audio). PISTA: todos los métodos que tenemos en nuestro componente de arriba pueden ser re-escritos como async action creators
 
 |||
 ```js
-Click to toggle hint  
-export const play = () => dispatch => {
-  AUDIO.play();
-  dispatch(startPlaying());
-};
+export const start = (song, list) => (dispatch) => {
+  dispatch(setCurrentSong(song));
+  dispatch(setCurrentSongList(list))
+  dispatch(loadSong(song.audioUrl));
+}
 
-export const pause = () => dispatch => {
-  AUDIO.pause();
-  dispatch(stopPlaying());
-};
-
-export const load = (currentSong, currentSongList) => dispatch => {
-  AUDIO.src = currentSong.audioUrl;
-  AUDIO.load();
-  dispatch(setCurrentSongList(currentSongList));
-  dispatch(setCurrentSong(currentSong));
-};
-
-export const startSong = (song, list) => dispatch => {
-  dispatch(pause());
-  dispatch(load(song, list));
+export const loadSong = audioUrl => (dispatch) => {
+  audio.src = audioUrl;
+  audio.load();
   dispatch(play());
-};
+}
 
+export const play = () => (dispatch) => {
+  audio.play();
+  dispatch(startPlaying());
+}
+
+export const pause = () => (dispatch) => {
+  audio.pause();
+  dispatch(stopPlaying());
+}
+
+const findSongIndex = (currentSongList, currentSong) => {
+  return currentSongList.findIndex(song => song.id === currentSong.id);
+}
+
+export const next = () => (dispatch, getState) => {
+  const { currentSongList, currentSong } = getState().player
+  let index = findSongIndex(currentSongList, currentSong) + 1;
+  if (index > currentSongList.length - 1) {
+    index = 0 
+  }
+  const song = currentSongList[index];
+  dispatch(setCurrentSong(song));
+  dispatch(loadSong(song.audioUrl));
+}
+
+export const previous = () => (dispatch, getState) => {
+  const { currentSongList, currentSong } = getState().player
+  let index = findSongIndex(currentSongList, currentSong) - 1;
+  if (index < 0) {
+    index = currentSongList.length - 1 
+  }
+  const song = currentSongList[index];
+  dispatch(setCurrentSong(song));
+  dispatch(loadSong(song.audioUrl));
+}
 ```
 |||
 
@@ -1002,21 +1021,25 @@ Imita lo que hicimos con `LyricsContainer`. Usa `subscribe`, `getState`, `this.u
 
 |||
 ```js
-play () {
-  store.dispatch(play());
-}
+  start(song, list) {
+    store.dispatch(start(song, list))
+  }
 
-pause () {
-  store.dispatch(pause());
-}
+  play() {
+    store.dispatch(play());
+  }
 
-loadSong (currentSong, currentSongList) {
-  store.dispatch(load(currentSong, currentSongList));
-}
+  pause() {
+    store.dispatch(pause());
+  }
 
-start (song, songs) {
-  store.dispatch(startSong(song, list));
-}
+  next() {
+    store.dispatch(next());
+  }
+
+  previous() {
+    store.dispatch(next());
+  }
 ```
 |||
 
@@ -1055,16 +1078,16 @@ Aun tenemos a nuestro `Main`, como el principal controlador de casi todo el mane
 Debajo hay una lista de todos los contenedores. ¿Podes refactorear tu `AppContainer` y mover su fincionalidad a los componentes apropiados?
 
 ```
-AddSongContainer.js
-AlbumContainer.js
-AlbumsContainer.js
-ArtistContainer.js
-FilterableArtistsContainer.js
-LyricsContainer.js
-NewPlaylistContainer.js
-PlayerContainer.js
-PlaylistContainer.js
-SidebarContainer.js
+SelectSongContainer.jsx
+AlbumContainer.jsx
+AlbumsContainer.jsx
+ArtistContainer.jsx
+FilterableArtistsContainer.jsx
+LyricsContainer.jsx
+NewPlaylistContainer.jsx
+PlayerContainer.jsx
+PlaylistContainer.jsx
+SidebarContainer.jsx
 ```
 
 También podes aprovechar de mover los `componentDidMount` de los componentes presentacionales para cargar la data a los contenedores.
