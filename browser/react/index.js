@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Route } from 'react-router-dom';
 import Main from './containers/Main';
+import store from './store';
+import {setLyrics} from './action-creators/lyrics';
 
 
 ReactDOM.render(
@@ -10,6 +12,7 @@ ReactDOM.render(
   </BrowserRouter>,
   document.getElementById('app')
 );
+
 // import store from './store';
 // import {setLyrics} from './action-creators/lyrics';
 
@@ -24,8 +27,6 @@ ReactDOM.render(
 // console.log('-------------------------');
 // console.log('Estado luego del segundo SET_LYRICS action: ', store.getState());
 
-// import store from './store';
-// import {setLyrics} from './action-creators/lyrics';
 // const unsubscribe = store.subscribe(function () {
 //     console.log('----------------');
 //     console.log('Cambio el State!!', store.getState());
