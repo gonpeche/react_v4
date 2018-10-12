@@ -6,5 +6,5 @@ import thunkMiddleware from 'redux-thunk';
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 export default createStore(reducer, composeEnhancers (
-    applyMiddleware(createLogger(), thunkMiddleware())
+    applyMiddleware(createLogger(), thunkMiddleware)
 ));
