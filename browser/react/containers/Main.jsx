@@ -10,6 +10,7 @@ import FilterableArtistsContainer from './FilterableArtistsContainer';
 import Artist from '../components/Artist';
 import Playlist from '../components/Playlist';
 import NewPlaylistContainer from '../containers/NewPlaylistContainer';
+import LyricsContainer from '../containers/LyricsContainer'
 
 export default class Main extends React.Component {
   constructor(props){
@@ -216,7 +217,9 @@ export default class Main extends React.Component {
                 addSong={this.addSong}
               />} 
             />
+            <Route path="/lyrics" component={LyricsContainer} />
             <Redirect from="/" to="/albums" />
+
           </Switch>
         </div>
         <Player 
