@@ -4,6 +4,7 @@ import Lyrics from '../components/Lyrics';
 import setLyrics from '../action-creators/lyrics';
 import axios from 'axios';
 
+
 export default class extends Component {
   constructor() {
     super();
@@ -32,8 +33,12 @@ export default class extends Component {
   handleSongInput(song) {
     this.setState({ songQuery: song });
   }
-  handleSubmit() {
-    // Proximamente...
+  handleSubmit(event) {
+    event.preventDefault()
+    axios.get(`/api/lyrics/${this.state.artistQuery}/${this.state.songQuery}`)
+    .then(res => res.data.lyric)
+    .then(data => setLyrics(data))
+
   }
   render() {
     return <Lyrics
